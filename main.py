@@ -5,11 +5,7 @@ from docx import Document
 import os
 import uvicorn
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
-
-app = FastAPI()
+app = FastAPI()  # Создаём приложение FastAPI
 templates = Jinja2Templates(directory="templates")
 
 # Показываем форму
@@ -64,3 +60,8 @@ async def generate_docx(
     doc.save(output_filename)
 
     return FileResponse(output_filename, media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document", filename=output_filename)
+
+# 🚀 Запуск сервера (Railway требует PORT из переменных окружения)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
