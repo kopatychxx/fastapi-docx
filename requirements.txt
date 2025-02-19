@@ -3,3 +3,7 @@ uvicorn
 python-docx
 jinja2
 python-multipart
+sqlalchemy
+asyncpg
+psycopg2-binary
+aiosqlite
