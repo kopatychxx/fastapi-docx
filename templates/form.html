@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генерация документа</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 400px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .error {
+            border-color: red;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Генерация DOCX</h2>
+    <form action="/generate-docx/" method="post">
+        <div class="form-group">
+            <label for="client_name">Имя клиента</label>
+            <input type="text" id="client_name" name="client_name" required>
+        </div>
+        <div class="form-group">
+            <label for="street_address">Адрес</label>
+            <input type="text" id="street_address" name="street_address" required>
+        </div>
+        <div class="form-group">
+            <label for="city_postal_code">Город и индекс</label>
+            <input type="text" id="city_postal_code" name="city_postal_code" required>
+        </div>
+        <div class="form-group">
+            <label for="client_email">Email</label>
+            <input type="email" id="client_email" name="client_email" required>
+        </div>
+        <div class="form-group">
+            <label for="accident_date">Дата ДТП</label>
+            <input type="date" id="accident_date" name="accident_date" required>
+        </div>
+        <div class="form-group">
+            <label for="current_date">Сегодняшняя дата</label>
+            <input type="date" id="current_date" name="current_date" required>
+        </div>
+        <div class="form-group">
+            <label for="file_number">Номер файла</label>
+            <input type="text" id="file_number" name="file_number" required>
+        </div>
+        <button type="submit">Создать DOCX</button>
+    </form>
+</div>
+</body>
+</html>
