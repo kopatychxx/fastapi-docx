@@ -2,7 +2,10 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Integer, String, Column, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Получаем строку подключения из переменной окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
