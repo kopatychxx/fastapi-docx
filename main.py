@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from database import SessionLocal, Template
+from database import SessionLocal, TemplateFile
 from docx import Document
 import os
 import zipfile
