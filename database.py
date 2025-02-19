@@ -5,7 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 import os
 
 # Получаем строку подключения из переменной окружения
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:fxfkUsnFIamFVaXAiYBbDVYWiqSVrNGz@caboose.proxy.rlwy.net:29589/railway")
+")
 
 # Если DATABASE_URL не определён, выбрасывается ошибка
 if DATABASE_URL is None:
