@@ -18,8 +18,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, clas
 Base = declarative_base()
 
 # Модель для хранения шаблонов
-class Template(Base):
-    __tablename__ = "templates"
+class TemplateFile(Base):
+    __tablename__ = "templates_file"
 
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String, unique=True, index=True)

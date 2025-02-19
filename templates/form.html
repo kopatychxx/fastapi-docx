@@ -1,95 +1,235 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генерация документа</title>
+    <title>Client Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 400px;
+            background-color: #f4f7f6;
+            margin: 0;
             padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        h2 {
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
             text-align: center;
-            margin-bottom: 20px;
+            color: #333;
         }
         .form-group {
             margin-bottom: 15px;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+        .form-group label {
+            font-size: 14px;
+            color: #555;
         }
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .error {
-            border-color: red;
-        }
-        button {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 10px;
-            background: #007bff;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .form-group button {
+            background-color: #4CAF50;
             color: white;
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
             font-size: 16px;
+            cursor: pointer;
+            width: 100%;
         }
-        button:hover {
-            background: #0056b3;
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .form-container .note {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Генерация DOCX</h2>
-    <form action="/generate-docx/" method="post">
+
+<div class="form-container">
+    <h1>Client Information Form</h1>
+    <form action="/generate_docx/" method="POST">
+        <!-- Client Information -->
         <div class="form-group">
-            <label for="client_name">Имя клиента</label>
-            <input type="text" id="client_name" name="client_name" required>
+            <label for="fileNumber">File Number</label>
+            <input type="text" id="fileNumber" name="FileNumber" required>
         </div>
+
         <div class="form-group">
-            <label for="street_address">Адрес</label>
-            <input type="text" id="street_address" name="street_address" required>
+            <label for="currentDate">Current Date</label>
+            <input type="date" id="currentDate" name="CurrentDate" required>
         </div>
+
         <div class="form-group">
-            <label for="city_postal_code">Город и индекс</label>
-            <input type="text" id="city_postal_code" name="city_postal_code" required>
+            <label for="clientName">Client Name</label>
+            <input type="text" id="clientName" name="ClientName" required>
         </div>
+
         <div class="form-group">
-            <label for="client_email">Email</label>
-            <input type="email" id="client_email" name="client_email" required>
+            <label for="clientAddressStreet">Client Address - Street</label>
+            <input type="text" id="clientAddressStreet" name="ClientAddressStreet" required>
         </div>
+
         <div class="form-group">
-            <label for="accident_date">Дата ДТП</label>
-            <input type="date" id="accident_date" name="accident_date" required>
+            <label for="clientAddressCity">Client Address - City</label>
+            <input type="text" id="clientAddressCity" name="ClientAddressCity" required>
         </div>
+
         <div class="form-group">
-            <label for="current_date">Сегодняшняя дата</label>
-            <input type="date" id="current_date" name="current_date" required>
+            <label for="clientEmail">Client Email</label>
+            <input type="email" id="clientEmail" name="ClientEmail" required>
         </div>
+
         <div class="form-group">
-            <label for="file_number">Номер файла</label>
-            <input type="text" id="file_number" name="file_number" required>
+            <label for="accidentDate">Accident Date</label>
+            <input type="date" id="accidentDate" name="AccidentDate" required>
         </div>
-        <button type="submit">Создать DOCX</button>
+
+        <!-- Insurance Company (Section B) -->
+        <div class="form-group">
+            <label for="insuranceCompanyNameSectionB">Insurance Company Name (Section B)</label>
+            <input type="text" id="insuranceCompanyNameSectionB" name="InsuranceCompanyNameSectionB" required>
+        </div>
+
+        <div class="form-group">
+            <label for="insuranceCompanyStreetSectionB">Insurance Company Street (Section B)</label>
+            <input type="text" id="insuranceCompanyStreetSectionB" name="InsuranceCompanyStreetSectionB" required>
+        </div>
+
+        <div class="form-group">
+            <label for="insuranceCompanyCityPostalSectionB">Insurance Company City & Postal Code (Section B)</label>
+            <input type="text" id="insuranceCompanyCityPostalSectionB" name="InsuranceCompanyCityPostalSectionB" required>
+        </div>
+
+        <div class="form-group">
+            <label for="insuranceCompanyContactSectionB">Insurance Company Contact (Section B)</label>
+            <input type="text" id="insuranceCompanyContactSectionB" name="InsuranceCompanyContactSectionB" required>
+        </div>
+
+        <div class="form-group">
+            <label for="claimSectionB">Claim Number (Section B)</label>
+            <input type="text" id="claimSectionB" name="ClaimSectionB" required>
+        </div>
+
+        <!-- Insurance Company (Section A) -->
+        <div class="form-group">
+            <label for="insuranceCompanyNameSectionA">Insurance Company Name (Section A)</label>
+            <input type="text" id="insuranceCompanyNameSectionA" name="InsuranceCompanyNameSectionA" required>
+        </div>
+
+        <div class="form-group">
+            <label for="insuranceCompanyStreetSectionA">Insurance Company Street (Section A)</label>
+            <input type="text" id="insuranceCompanyStreetSectionA" name="InsuranceCompanyStreetSectionA" required>
+        </div>
+
+        <div class="form-group">
+            <label for="insuranceCompanyCityPostalSectionA">Insurance Company City & Postal Code (Section A)</label>
+            <input type="text" id="insuranceCompanyCityPostalSectionA" name="InsuranceCompanyCityPostalSectionA" required>
+        </div>
+
+        <div class="form-group">
+            <label for="insuranceCompanyContactSectionA">Insurance Company Contact (Section A)</label>
+            <input type="text" id="insuranceCompanyContactSectionA" name="InsuranceCompanyContactSectionA" required>
+        </div>
+
+        <div class="form-group">
+            <label for="defendantName">Defendant Name</label>
+            <input type="text" id="defendantName" name="DefendantName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="policySectionA">Insurance Policy Number (Section A)</label>
+            <input type="text" id="policySectionA" name="PolicySectionA" required>
+        </div>
+
+        <!-- Additional Fields -->
+        <div class="form-group">
+            <label for="clientDOB">Client Date of Birth</label>
+            <input type="date" id="clientDOB" name="ClientDOB" required>
+        </div>
+
+        <div class="form-group">
+            <label for="clientABHC">Client ABHC</label>
+            <input type="text" id="clientABHC" name="ClientABHC" required>
+        </div>
+
+        <div class="form-group">
+            <label for="accidentDateEdit">Accident Date (5 years before)</label>
+            <input type="date" id="accidentDateEdit" name="AccidentDateEdit" required>
+        </div>
+
+        <div class="form-group">
+            <label for="policeNumber">Police Number</label>
+            <input type="text" id="policeNumber" name="PoliceNumber" required>
+        </div>
+
+        <div class="form-group">
+            <label for="collisionNumber">Collision Number</label>
+            <input type="text" id="collisionNumber" name="CollisionNumber" required>
+        </div>
+
+        <div class="form-group">
+            <label for="accidentPlace">Accident Place</label>
+            <input type="text" id="accidentPlace" name="AccidentPlace" required>
+        </div>
+
+        <div class="form-group">
+            <label for="clinicName">Clinic Name</label>
+            <input type="text" id="clinicName" name="ClinicName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="clinicAddressStreet">Clinic Address - Street</label>
+            <input type="text" id="clinicAddressStreet" name="ClinicAddressStreet" required>
+        </div>
+
+        <div class="form-group">
+            <label for="clinicAddressCity">Clinic Address - City</label>
+            <input type="text" id="clinicAddressCity" name="ClinicAddressCity" required>
+        </div>
+
+        <div class="form-group">
+            <label for="clientSin">Client SIN</label>
+            <input type="text" id="clientSin" name="ClientSin" required>
+        </div>
+
+        <div class="form-group">
+            <label for="employerName">Employer Name</label>
+            <input type="text" id="employerName" name="EmployerName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="employerAddressStreet">Employer Address - Street</label>
+            <input type="text" id="employerAddressStreet" name="EmployerAddressStreet" required>
+        </div>
+
+        <div class="form-group">
+            <label for="employerAddressCity">Employer Address - City</label>
+            <input type="text" id="employerAddressCity" name="EmployerAddressCity" required>
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Submit</button>
+        </div>
     </form>
 </div>
+
 </body>
 </html>

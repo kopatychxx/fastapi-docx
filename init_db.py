@@ -1,22 +1,12 @@
 import asyncio
-from database import SessionLocal, engine, Base, Template
-import os
-
-TEMPLATES_DIR = "templates_docx"  # Папка с шаблонами
+from database import engine, Base
 
 async def init_db():
+    # Создание таблиц
     async with engine.begin() as conn:
+        # Вместо run_sync используйте этот подход для асинхронной работы
         await conn.run_sync(Base.metadata.create_all)
 
-    async with SessionLocal() as session:
-        for filename in os.listdir(TEMPLATES_DIR):
-            filepath = os.path.join(TEMPLATES_DIR, filename)
-            with open(filepath, "rb") as file:
-                content = file.read()
-
-            template = Template(filename=filename, content=content)
-            session.add(template)
-
-        await session.commit()
-
-asyncio.run(init_db())
+# Запуск функции инициализации
+if __name__ == "__main__":
+    asyncio.run(init_db())

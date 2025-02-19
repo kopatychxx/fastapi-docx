@@ -7,6 +7,8 @@ from database import SessionLocal, Template
 from docx import Document
 import os
 import zipfile
+import io
+from datetime import datetime, timedelta
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -32,58 +34,100 @@ async def generate_docx(
     accident_date: str = Form(...),
     current_date: str = Form(...),
     file_number: str = Form(...),
+    client_dob: str = Form(...),
+    client_abhc: str = Form(...),
+    insurance_company_name_section_b: str = Form(...),
+    insurance_company_street_section_b: str = Form(...),
+    insurance_company_city_postal_section_b: str = Form(...),
+    insurance_company_contact_section_b: str = Form(...),
+    claim_section_b: str = Form(...),
+    insurance_company_name_section_a: str = Form(...),
+    insurance_company_street_section_a: str = Form(...),
+    insurance_company_city_postal_section_a: str = Form(...),
+    insurance_company_contact_section_a: str = Form(...),
+    defendant_name: str = Form(...),
+    policy_section_a: str = Form(...),
+    police_number: str = Form(...),
+    collision_number: str = Form(...),
+    accident_place: str = Form(...),
+    clinic_name: str = Form(...),
+    clinic_address_street: str = Form(...),
+    clinic_address_city: str = Form(...),
+    client_sin: str = Form(...),
+    employer_name: str = Form(...),
+    employer_address_street: str = Form(...),
+    employer_address_city: str = Form(...),
 ):
     templates_data = await get_templates()
 
+    # Рассчитываем AccidentDateEdit (AccidentDate - 5 лет)
+    accident_date_obj = datetime.strptime(accident_date, "%Y-%m-%d")
+    accident_date_edit = (accident_date_obj - timedelta(days=5*365)).strftime("%Y-%m-%d")
+
+    # Замены переменных
     replacements = {
+        "{{FileNumber}}": file_number,
+        "{{CurrentDate}}": current_date,
         "{{ClientName}}": client_name,
-        "{{StreetAddress}}": street_address,
-        "{{CityPostalCode}}": city_postal_code,
+        "{{ClientAddressStreet}}": street_address,
+        "{{ClientAddressCity}}": city_postal_code,
         "{{ClientEmail}}": client_email,
         "{{AccidentDate}}": accident_date,
-        "{{CurrentDate}}": current_date,
-        "{{FileNumber}}": file_number
+        "{{AccidentDateEdit}}": accident_date_edit,
+        "{{ClientDOB}}": client_dob,
+        "{{ClientABHC}}": client_abhc,
+        "{{InsuranceCompanyNameSectionB}}": insurance_company_name_section_b,
+        "{{InsuranceCompanyStreetSectionB}}": insurance_company_street_section_b,
+        "{{InsuranceCompanyCityPostalSectionB}}": insurance_company_city_postal_section_b,
+        "{{InsuranceCompanyContactSectionB}}": insurance_company_contact_section_b,
+        "{{ClaimSectionB}}": claim_section_b,
+        "{{InsuranceCompanyNameSectionA}}": insurance_company_name_section_a,
+        "{{InsuranceCompanyStreetSectionA}}": insurance_company_street_section_a,
+        "{{InsuranceCompanyCityPostalSectionA}}": insurance_company_city_postal_section_a,
+        "{{InsuranceCompanyContactSectionA}}": insurance_company_contact_section_a,
+        "{{DefendantName}}": defendant_name,
+        "{{PolicySectionA}}": policy_section_a,
+        "{{PoliceNumber}}": police_number,
+        "{{CollisionNumber}}": collision_number,
+        "{{AccidentPlace}}": accident_place,
+        "{{ClinicName}}": clinic_name,
+        "{{ClinicAddressStreet}}": clinic_address_street,
+        "{{ClinicAddressCity}}": clinic_address_city,
+        "{{ClientSin}}": client_sin,
+        "{{EmployerName}}": employer_name,
+        "{{EmployerAddressStreet}}": employer_address_street,
+        "{{EmployerAddressCity}}": employer_address_city,
     }
 
-    output_dir = f"generated/{file_number}"
-    os.makedirs(output_dir, exist_ok=True)
+    # Виртуальная папка для архива
+    zip_buffer = io.BytesIO()
 
-    files_to_zip = []
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
+        for template_data in templates_data:
+            # Создаём документ из шаблона в памяти
+            doc = Document(io.BytesIO(template_data.content))
 
-    for template_data in templates_data:
-        template_path = os.path.join(output_dir, template_data.filename)
-        with open(template_path, "wb") as file:
-            file.write(template_data.content)
+            # Заменяем переменные в документе
+            for para in doc.paragraphs:
+                for key, value in replacements.items():
+                    if key in para.text:
+                        para.text = para.text.replace(key, value)
 
-        doc = Document(template_path)
+            for table in doc.tables:
+                for row in table.rows:
+                    for cell in row.cells:
+                        for key, value in replacements.items():
+                            if key in cell.text:
+                                cell.text = cell.text.replace(key, value)
 
-        for para in doc.paragraphs:
-            for key, value in replacements.items():
-                if key in para.text:
-                    para.text = para.text.replace(key, value)
+            # Записываем документ в архив в памяти
+            doc_filename = f"generated_{template_data.filename}"
+            with io.BytesIO() as doc_buffer:
+                doc.save(doc_buffer)
+                zipf.writestr(doc_filename, doc_buffer.getvalue())
 
-        for table in doc.tables:
-            for row in table.rows:
-                for cell in row.cells:
-                    for key, value in replacements.items():
-                        if key in cell.text:
-                            cell.text = cell.text.replace(key, value)
+    # Получаем содержимое архива
+    zip_buffer.seek(0)
 
-        output_filename = os.path.join(output_dir, f"generated_{template_data.filename}")
-        doc.save(output_filename)
-        files_to_zip.append(output_filename)
-
-    zip_filename = f"{file_number}_documents.zip"
-    zip_path = os.path.join("generated", zip_filename)
-
-    with zipfile.ZipFile(zip_path, "w") as zipf:
-        for file in files_to_zip:
-            zipf.write(file, os.path.basename(file))
-
-    return FileResponse(zip_path, media_type="application/zip", filename=zip_filename)
-
-# Запуск FastAPI на Railway
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # Отправляем архив в ответ
+    return FileResponse(zip_buffer, media_type="application/zip", filename=f"documents_package_{client_name}.zip")
